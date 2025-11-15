@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVVALENAREDE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f2f2f2;
+        }
+        header {
+            background: #111;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        #news {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        .item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.15);
+        }
+        .item h3 {
+            margin: 0 0 10px;
+        }
+        .item a {
+            color: #1a0dab;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>TVVALENAREDE</header>
+
+<div id="news">Carregando notícias...</div>
+
+<script>
+async function carregarNoticias() {
+    try {
+        const url = "https://api.currentsapi.services/v1/latest-news?apiKey=demo";
+        const resposta = await fetch(url);
+        const dados = await resposta.json();
+
+        const container = document.getElementById("news");
+        container.innerHTML = "";
+
+        dados.news.slice(0, 10).forEach(item => {
+            container.innerHTML += `
+                <div class="item">
+                    <h3>${item.title}</h3>
+                    <p>${item.description || "Sem descrição."}</p>
+                    <a href="${item.url}" target="_blank">Ler notícia completa</a>
+                </div>
+            `;
+        });
+    } catch (error) {
+        document.getElementById("news").innerHTML =
+            "Erro ao carregar notícias. Tente novamente mais tarde.";
+    }
+}
+
+carregarNoticias();
+setInterval(carregarNoticias, 300000); // atualiza a cada 5 minutos
+</script>
+
+</body>
+</html>
